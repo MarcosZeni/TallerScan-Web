@@ -1,0 +1,222 @@
+@import "tailwindcss";
+
+/*
+ * Tokens de TallerScan. Los componentes usan estos nombres (bg-primary,
+ * text-muted, bg-banda...) y nunca colores de Tailwind sueltos: cambiar de
+ * paleta o pasar a modo oscuro es redefinir estas variables, y ningún
+ * componente cambia.
+ *
+ * Azul de overol para todo lo importante, amarillo de seguridad para UNA
+ * acción por pantalla (pedir turno).
+ *
+ * "Banda": encabezado, portada y pie. En las paletas claras es igual a la
+ * superficie; en "franjas" es azul noche con texto claro.
+ */
+@theme {
+  --font-sans: var(--font-barlow), system-ui, sans-serif;
+  --font-display: var(--font-barlow-condensed), var(--font-barlow), system-ui, sans-serif;
+
+  --color-background: #f6f7f5;
+  --color-surface: #ffffff;
+  --color-foreground: #17202a;
+  --color-muted: #56616b;
+  --color-border: #d3d9de;
+  --color-border-strong: #9aa5ae;
+
+  --color-primary: #1f4e79;
+  --color-primary-hover: #183e61;
+  --color-primary-soft: #e3ecf5;
+  --color-on-primary: #ffffff;
+
+  --color-accent: #f2c230;
+  --color-accent-hover: #e0b020;
+  --color-on-accent: #17202a;
+
+  --color-success: #1e7a46;
+  --color-success-soft: #e4f3ea;
+  --color-warning: #8a5a00;
+  --color-warning-soft: #fdf1d6;
+  --color-danger: #b42318;
+  --color-danger-soft: #fbe7e5;
+
+  --color-banda: #ffffff;
+  --color-on-banda: #17202a;
+  --color-banda-muted: #56616b;
+  --color-banda-borde: #d3d9de;
+  --color-banda-enlace: #1f4e79;
+  --color-banda-hover: #e3ecf5;
+}
+
+/*
+ * Paletas para comparar (data-paleta en <html>, ver selector-paleta.tsx).
+ * Solo cambian fondos y la banda: el azul y el amarillo son los mismos.
+ * "blanco" es la de arriba, sin cambios.
+ */
+@layer base {
+  :root[data-paleta="cemento"] {
+    --color-background: #e9ecea;
+    --color-surface: #f8f9f8;
+    --color-border: #cbd2ce;
+    --color-banda: #f8f9f8;
+    --color-banda-borde: #cbd2ce;
+  }
+
+  :root[data-paleta="plano"] {
+    --color-background: #e6edf4;
+    --color-surface: #f7fafd;
+    --color-border: #c7d5e3;
+    --color-primary-soft: #d9e6f2;
+    --color-banda: #f7fafd;
+    --color-banda-borde: #c7d5e3;
+    --color-banda-hover: #d9e6f2;
+  }
+
+  :root[data-paleta="franjas"] {
+    --color-background: #eceeec;
+    --color-surface: #fafbfa;
+    --color-border: #cfd5d1;
+    --color-banda: #14273b;
+    --color-on-banda: #eef3f8;
+    --color-banda-muted: #a9b8c8;
+    --color-banda-borde: #2a4057;
+    --color-banda-enlace: #ffffff;
+    --color-banda-hover: color-mix(in oklab, #ffffff 12%, transparent);
+  }
+
+  /* Modo oscuro: elegido (data-theme) o del sistema. Pisa a las paletas claras. */
+  :root[data-theme="dark"] {
+    --color-background: #11171d;
+    --color-surface: #182029;
+    --color-foreground: #e8ecef;
+    --color-muted: #9aa6b1;
+    --color-border: #2a3540;
+    --color-border-strong: #4a5866;
+    --color-primary: #7fb0de;
+    --color-primary-hover: #a3c7ea;
+    --color-primary-soft: color-mix(in oklab, #7fb0de 16%, transparent);
+    --color-on-primary: #0e1a26;
+    --color-success: #5cc58a;
+    --color-success-soft: color-mix(in oklab, #5cc58a 14%, transparent);
+    --color-warning: #f0c661;
+    --color-warning-soft: color-mix(in oklab, #f0c661 14%, transparent);
+    --color-danger: #f2877c;
+    --color-danger-soft: color-mix(in oklab, #f2877c 14%, transparent);
+    --color-banda: #0c1117;
+    --color-on-banda: #e8ecef;
+    --color-banda-muted: #9aa6b1;
+    --color-banda-borde: #24303b;
+    --color-banda-enlace: #7fb0de;
+    --color-banda-hover: color-mix(in oklab, #7fb0de 14%, transparent);
+    color-scheme: dark;
+  }
+
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) {
+    --color-background: #11171d;
+    --color-surface: #182029;
+    --color-foreground: #e8ecef;
+    --color-muted: #9aa6b1;
+    --color-border: #2a3540;
+    --color-border-strong: #4a5866;
+    --color-primary: #7fb0de;
+    --color-primary-hover: #a3c7ea;
+    --color-primary-soft: color-mix(in oklab, #7fb0de 16%, transparent);
+    --color-on-primary: #0e1a26;
+    --color-success: #5cc58a;
+    --color-success-soft: color-mix(in oklab, #5cc58a 14%, transparent);
+    --color-warning: #f0c661;
+    --color-warning-soft: color-mix(in oklab, #f0c661 14%, transparent);
+    --color-danger: #f2877c;
+    --color-danger-soft: color-mix(in oklab, #f2877c 14%, transparent);
+    --color-banda: #0c1117;
+    --color-on-banda: #e8ecef;
+    --color-banda-muted: #9aa6b1;
+    --color-banda-borde: #24303b;
+    --color-banda-enlace: #7fb0de;
+    --color-banda-hover: color-mix(in oklab, #7fb0de 14%, transparent);
+    color-scheme: dark;
+    }
+  }
+
+  /* "Oscuro de taller": oscuro siempre, aunque el teléfono esté en claro. */
+  :root[data-paleta="oscuro"] {
+    --color-background: #11171d;
+    --color-surface: #182029;
+    --color-foreground: #e8ecef;
+    --color-muted: #9aa6b1;
+    --color-border: #2a3540;
+    --color-border-strong: #4a5866;
+    --color-primary: #7fb0de;
+    --color-primary-hover: #a3c7ea;
+    --color-primary-soft: color-mix(in oklab, #7fb0de 16%, transparent);
+    --color-on-primary: #0e1a26;
+    --color-success: #5cc58a;
+    --color-success-soft: color-mix(in oklab, #5cc58a 14%, transparent);
+    --color-warning: #f0c661;
+    --color-warning-soft: color-mix(in oklab, #f0c661 14%, transparent);
+    --color-danger: #f2877c;
+    --color-danger-soft: color-mix(in oklab, #f2877c 14%, transparent);
+    --color-banda: #0c1117;
+    --color-on-banda: #e8ecef;
+    --color-banda-muted: #9aa6b1;
+    --color-banda-borde: #24303b;
+    --color-banda-enlace: #7fb0de;
+    --color-banda-hover: color-mix(in oklab, #7fb0de 14%, transparent);
+    color-scheme: dark;
+  }
+
+  :root {
+    color-scheme: light;
+  }
+
+  html {
+    -webkit-text-size-adjust: 100%;
+  }
+
+  body {
+    background: var(--color-background);
+    color: var(--color-foreground);
+    font-size: 1.0625rem;
+    line-height: 1.55;
+  }
+
+  h1, h2, h3 {
+    font-family: var(--font-display);
+    line-height: 1.1;
+    letter-spacing: 0.005em;
+  }
+
+  :focus-visible {
+    outline: 3px solid var(--color-primary);
+    outline-offset: 2px;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    *, *::before, *::after {
+      animation-duration: 0.01ms !important;
+      transition-duration: 0.01ms !important;
+    }
+  }
+}
+
+/*
+ * Pizarrón de precios: servicio ....... precio. Los puntos guía unen el
+ * nombre con el precio como en la lista pintada en la pared del taller. Es el
+ * único adorno del sitio.
+ */
+@layer components {
+  .linea-precio {
+    display: flex;
+    align-items: baseline;
+    gap: 0.5rem;
+  }
+  .linea-precio > .guia {
+    flex: 1;
+    min-width: 1.5rem;
+    border-bottom: 2px dotted var(--color-border-strong);
+    transform: translateY(-0.3em);
+  }
+  .tabular {
+    font-variant-numeric: tabular-nums;
+  }
+}
