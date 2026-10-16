@@ -1,0 +1,54 @@
+# Al hacer push a main: compila la web y la sube al servidor por SSH.
+#
+# En GitHub (Settings > Secrets and variables > Actions):
+#   Secrets:   DEPLOY_SSH_KEY   clave privada de deploy (la pública está en el
+#                               servidor, restringida a "tallerscan-recibir")
+#   Variables: DEPLOY_HOST      IP o dominio del servidor
+#              DEPLOY_PORT      puerto SSH (DonWeb no usa el 22)
+#              SITE_URL         URL pública del sitio (http://IP o https://dominio)
+#              SITE_NAME        nombre del sitio (opcional, TallerScan)
+#              PALETA           paleta por defecto (opcional)
+#              MOSTRAR_PALETAS  1 para dejar el selector de paletas (opcional)
+name: Subir web
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+concurrency:
+  group: deploy-web
+  cancel-in-progress: false
+
+jobs:
+  subir:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+
+      - run: npm ci
+
+      - name: Compilar
+        env:
+          NEXT_PUBLIC_SITE_NAME: ${{ vars.SITE_NAME || 'TallerScan' }}
+          NEXT_PUBLIC_SITE_URL: ${{ vars.SITE_URL }}
+          NEXT_PUBLIC_API_URL: ""
+          NEXT_PUBLIC_PALETA: ${{ vars.PALETA || 'blanco' }}
+          NEXT_PUBLIC_MOSTRAR_PALETAS: ${{ vars.MOSTRAR_PALETAS || '0' }}
+        run: |
+          test -n "$NEXT_PUBLIC_SITE_URL" || { echo "Falta la variable SITE_URL en GitHub"; exit 1; }
+          npm run build
+
+      - name: Clave SSH
+        run: |
+          mkdir -p ~/.ssh && chmod 700 ~/.ssh
+          printf '%s\n' "${{ secrets.DEPLOY_SSH_KEY }}" > ~/.ssh/deploy && chmod 600 ~/.ssh/deploy
+          ssh-keyscan -p "${{ vars.DEPLOY_PORT }}" "${{ vars.DEPLOY_HOST }}" >> ~/.ssh/known_hosts 2>/dev/null
+
+      - name: Subir
+        run: tar czf - -C out . | ssh -i ~/.ssh/deploy -o IdentitiesOnly=yes -p "${{ vars.DEPLOY_PORT }}" "root@${{ vars.DEPLOY_HOST }}" web
