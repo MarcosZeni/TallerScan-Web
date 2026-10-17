@@ -5,7 +5,7 @@
 #                               servidor, restringida a "tallerscan-recibir")
 #   Variables: DEPLOY_HOST      IP o dominio del servidor
 #              DEPLOY_PORT      puerto SSH (DonWeb no usa el 22)
-#              SITE_URL         URL pública del sitio (http://IP o https://dominio)
+#              SITE_URL         URL pública del sitio (https://tallerscan.com.ar)
 #              SITE_NAME        nombre del sitio (opcional, TallerScan)
 #              PALETA           paleta por defecto (opcional)
 #              MOSTRAR_PALETAS  1 para dejar el selector de paletas (opcional)
