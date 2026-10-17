@@ -7,7 +7,7 @@ Sitio público (portada, precios, pedir turno, mi turno, dónde estamos) y panel
 1. Levantar la API: `..\ApiCore\iniciar-api.bat` (queda en `http://localhost:5100`).
 2. **`iniciar-web.bat`** (o `npm run dev`): `http://localhost:3000`, en esa misma ventana.
 
-O todo junto con `..iniciar-todo.bat` (dos ventanas: API y web); cortar con `..detener-todo.bat`.
+O todo junto con `..\iniciar-todo.bat` (dos ventanas: API y web); cortar con `..\detener-todo.bat`.
 
 Variables en `.env.local` (copiar de `.env.example`). Todas son de build:
 

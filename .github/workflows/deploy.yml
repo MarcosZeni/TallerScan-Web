@@ -14,6 +14,8 @@ name: Subir web
 on:
   push:
     branches: [main]
+    # Un push que solo cambia documentación no recompila ni sube la web.
+    paths-ignore: ["**/*.md"]
   workflow_dispatch:
 
 concurrency:
