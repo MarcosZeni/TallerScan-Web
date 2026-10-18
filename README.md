@@ -27,6 +27,7 @@ Dirección, horarios, redes, WhatsApp y precios **no** van acá: se cargan desde
 | `/` | Portada con la promo del escaneo |
 | `/tarifas` | Pizarrón de precios |
 | `/turnos` | Pedir turno en 3 pasos (`?s=<id>` preselecciona un servicio) |
+| `/mi-turno` | Buscar los turnos propios con patente + WhatsApp o email |
 | `/mi-turno?c=<código>` | Estado del turno, cancelar o cambiar el día (el link llega por WhatsApp y email) |
 | `/ubicacion` | Dirección, horarios, contacto |
 | `/ingresar` | Login de los socios |

@@ -6,6 +6,7 @@ import { PieSitio } from "./components/pie-sitio";
 const nav = [
   { href: "/tarifas", label: "Precios" },
   { href: "/turnos", label: "Turnos" },
+  { href: "/mi-turno", label: "Mi turno" },
   { href: "/ubicacion", label: "Dónde estamos" },
 ];
 
@@ -24,7 +25,7 @@ export default function SitioLayout({ children }: { children: React.ReactNode })
           </nav>
           <ButtonLink href="/turnos" variante="accion" className="shrink-0">Pedir turno</ButtonLink>
         </div>
-        {/* En el celular, los links en una fila propia: tres palabras entran sin menú escondido. */}
+        {/* En el celular, los links en una fila propia: cuatro entran sin menú escondido. */}
         <nav aria-label="Principal" className="flex justify-around border-t border-banda-borde sm:hidden">
           {nav.map((n) => (
             <Link key={n.href} href={n.href} className="flex-1 py-2.5 text-center font-medium text-on-banda hover:text-banda-enlace">

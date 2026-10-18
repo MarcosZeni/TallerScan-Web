@@ -64,6 +64,19 @@ export type MiTurno = {
   opciones: Opcion[];
 };
 
+/** Un turno en la lista de "Mi turno" (búsqueda por patente + contacto). */
+export type MiTurnoResumen = {
+  id: number;
+  codigo: string;
+  tipo: "hoy" | "dia";
+  estado: EstadoTurno;
+  fecha: string;
+  hora: string | null;
+  franja: "manana" | "tarde" | null;
+  servicios: string[];
+  otro: string | null;
+};
+
 export type Usuario = {
   id: number;
   nombre: string;

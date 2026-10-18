@@ -15,13 +15,14 @@ import { misTurnos } from "@/lib/mis-turnos";
 import { useSitio } from "@/lib/sitio";
 import type { Disponibilidad, MiTurno as Turno, Opcion } from "@/lib/tipos";
 import { SelectorOpciones } from "@/components/selector-opciones";
+import { BuscarTurnos } from "./buscar-turnos";
 import { linkWhatsApp } from "@/lib/whatsapp";
 
 export function MiTurno() {
   const params = useSearchParams();
-  // Sin código en el link: el último turno pedido desde este navegador.
+  // Sin código en el link: buscador, con atajo al último turno pedido desde este navegador.
   const ultimo = useSyncExternalStore(sinSuscripcion, () => misTurnos()[0]?.codigo ?? null, () => null);
-  const codigo = params.get("c") ?? ultimo;
+  const codigo = params.get("c");
   const { datos: turno, error: errorCarga, recargar } = useDatos<Turno>(codigo ? `/api/v1/turnos/mio?c=${encodeURIComponent(codigo)}` : null);
   const [errorAccion, setErrorAccion] = useState<string | null>(null);
   const [confirmando, setConfirmando] = useState(false);
@@ -69,18 +70,7 @@ export function MiTurno() {
 
   const wa = linkWhatsApp(sitio?.taller.whatsapp, turno ? `Hola, te escribo por mi turno #${turno.id}.` : "Hola, te escribo por mi turno.");
 
-  if (!codigo) {
-    return (
-      <div className="mx-auto max-w-2xl px-4 py-12">
-        <h1 className="text-4xl font-bold">Mi turno</h1>
-        <p className="mt-3 text-muted">Abrí el link del email que te mandamos al pedir el turno. Ahí está todo.</p>
-        <div className="mt-6 flex flex-wrap gap-3">
-          <ButtonLink href="/turnos" variante="accion">Pedir turno</ButtonLink>
-          {wa && <ButtonA href={wa} variante="secundario">Escribir por WhatsApp</ButtonA>}
-        </div>
-      </div>
-    );
-  }
+  if (!codigo) return <BuscarTurnos ultimo={ultimo} />;
 
   return (
     <div className="mx-auto max-w-2xl px-4 py-12">
@@ -111,6 +101,7 @@ export function MiTurno() {
 
           <div className="flex flex-wrap gap-3">
             {wa && <ButtonA href={wa} variante="secundario">Escribir por WhatsApp</ButtonA>}
+            <ButtonLink href="/mi-turno" variante="fantasma">Ver todos mis turnos</ButtonLink>
             {["rechazado", "liberado", "cancelado"].includes(turno.estado) && <ButtonLink href="/turnos" variante="accion">Pedir otro turno</ButtonLink>}
             {turno.puedeCancelar && !confirmando && !cambiando && (
               <>
