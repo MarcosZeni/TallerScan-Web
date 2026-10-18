@@ -41,6 +41,12 @@ export const ESTADOS: Record<string, string> = {
   archivado: "Archivado",
 };
 
+/** Respuestas de "¿Cómo nos conociste?" (la base guarda la clave). */
+export const CONOCIO: Record<string, string> = {
+  instagram: "Instagram", facebook: "Facebook", tiktok: "TikTok", google: "Google",
+  recomendacion: "Recomendación", paso: "Pasó por el taller", otro: "Otro", sin_dato: "No contestó",
+};
+
 /** Hoy en la hora del taller (Argentina), como "2026-10-16". */
 export const hoyTaller = () =>
   new Intl.DateTimeFormat("en-CA", { timeZone: "America/Argentina/Buenos_Aires" }).format(new Date());

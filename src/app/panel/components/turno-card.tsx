@@ -5,7 +5,7 @@ import { Aviso, Etiqueta, tonoEstado } from "@/components/ui/aviso";
 import { Button, ButtonA } from "@/components/ui/button";
 import { Field, Input, Select } from "@/components/ui/field";
 import { api, mensajeDe } from "@/lib/api";
-import { ESTADOS, fechaCorta, formatoPesos, franjaTexto, hora, hoyTaller, rangoPesos } from "@/lib/format";
+import { CONOCIO, ESTADOS, fechaCorta, formatoPesos, franjaTexto, hora, hoyTaller, rangoPesos } from "@/lib/format";
 import { siVencio } from "@/lib/sesion";
 import type { AccionTurno, Turno } from "@/lib/tipos";
 
@@ -87,7 +87,8 @@ export function TurnoCard({ turno, onCambio, mostrarFecha = false }: { turno: Tu
           ? <>Cobrado {formatoPesos(t.montoCobrado)} (mecánico {formatoPesos(t.parteMecanico ?? 0)}, ganancia {formatoPesos(t.parteDesarrollador ?? 0)}{t.descuentoEscaneo > 0 ? `, se descontó el escaneo de ${formatoPesos(t.descuentoEscaneo)}` : ""})</>
           : t.precioMax > 0 ? <>Estimado {rangoPesos(t.precioMin, t.precioMax)}</> : null}
       </p>
-      {(t.origen || t.conocio) && <p className="text-sm text-muted">Vino por: {[t.origen, t.campania, t.conocio].filter(Boolean).join(" / ")}</p>}
+      {t.origen && <p className="text-sm text-muted">Publicidad: {[t.origen, t.campania].filter(Boolean).join(" / ")}</p>}
+      {t.conocio && <p className="text-sm text-muted">Nos conoció por: {CONOCIO[t.conocio] ?? t.conocio}</p>}
 
       {error && <div className="mt-3"><Aviso tipo="error">{error}</Aviso></div>}
       {avisar && (

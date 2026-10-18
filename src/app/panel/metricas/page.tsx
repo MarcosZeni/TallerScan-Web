@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import { Aviso, Cargando } from "@/components/ui/aviso";
-import { fechaCorta, formatoPesos, hoyTaller, sumarDias } from "@/lib/format";
+import { CONOCIO, fechaCorta, formatoPesos, hoyTaller, sumarDias } from "@/lib/format";
 import type { Metricas } from "@/lib/tipos";
 import { useDatos } from "@/lib/use-datos";
 
@@ -12,11 +12,6 @@ const RANGOS = [
   { dias: 90, label: "90 días" },
   { dias: 365, label: "1 año" },
 ];
-
-const CONOCIO: Record<string, string> = {
-  instagram: "Instagram", facebook: "Facebook", tiktok: "TikTok", google: "Google",
-  recomendacion: "Recomendación", paso: "Pasó por el taller", otro: "Otro", sin_dato: "No contestó",
-};
 
 export default function Page() {
   const [dias, setDias] = useState(30);
