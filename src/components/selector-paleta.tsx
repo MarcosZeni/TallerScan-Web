@@ -14,7 +14,7 @@ export const PALETAS = [
   { id: "oscuro", nombre: "Oscuro de taller" },
 ] as const;
 
-export const PALETA_POR_DEFECTO = process.env.NEXT_PUBLIC_PALETA || "blanco";
+export const PALETA_POR_DEFECTO = process.env.NEXT_PUBLIC_PALETA || "oscuro";
 export const CLAVE_PALETA = "ts_paleta";
 
 /**
