@@ -167,7 +167,8 @@ export type TurnosConfig = {
   diasGancho: number;
 };
 
-export type ConfigCompleta = { taller: Taller; precios: PreciosConfig; turnos: TurnosConfig };
+/** `precios` (tramos de ganancia) solo llega al dueño; para el resto viene null. */
+export type ConfigCompleta = { taller: Taller; precios: PreciosConfig | null; turnos: TurnosConfig };
 
 export type Conteo = { clave: string; cantidad: number };
 

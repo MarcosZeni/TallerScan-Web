@@ -13,21 +13,22 @@ import type { ConfigCompleta, PreciosConfig, ServicioAdmin } from "@/lib/tipos";
 export default function Page() {
   const { usuario } = useUsuario();
   const s = useDatos<ServicioAdmin[]>(usuario.editaTarifas ? "/api/v1/admin/servicios" : null);
-  const c = useDatos<ConfigCompleta>(usuario.editaTarifas ? "/api/v1/admin/config" : null);
-  const servicios = s.datos, precios = c.datos?.precios;
-  const cargar = () => { s.recargar(); c.recargar(); };
+  // Los tramos de ganancia son del dueño: a los demás ni se les piden.
+  const c = useDatos<ConfigCompleta>(usuario.esDueno ? "/api/v1/admin/config" : null);
+  const servicios = s.datos, precios = c.datos?.precios ?? null;
+  const cargar = () => { s.recargar(); if (usuario.esDueno) c.recargar(); };
 
   if (!usuario.editaTarifas) return <Aviso tipo="atencion">Los precios los edita solo quien tiene el permiso de tarifas.</Aviso>;
   if (s.error || c.error) return <Aviso tipo="error">{s.error ?? c.error}</Aviso>;
-  if (!servicios || !precios) return <Cargando />;
+  if (!servicios || (usuario.esDueno && !precios)) return <Cargando />;
 
   return (
     <div className="space-y-10">
       <div>
         <h1 className="text-3xl font-bold sm:text-4xl">Precios</h1>
-        <p className="text-muted">Cargás el precio base (lo que cobra el mecánico). La web publica base + ganancia por tramos, redondeado hacia arriba.</p>
+        <p className="text-muted">Cargás el precio base (lo que cobra el mecánico). La web publica el precio final, redondeado hacia arriba.</p>
       </div>
-      <Tramos inicial={precios} onGuardado={cargar} />
+      {precios && <Tramos inicial={precios} onGuardado={cargar} />}
       <section className="space-y-3">
         <h2 className="text-2xl font-bold">Servicios</h2>
         {servicios.map((s) => <ServicioFila key={s.id} s={s} onGuardado={cargar} />)}
