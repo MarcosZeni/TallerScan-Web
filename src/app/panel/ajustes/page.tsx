@@ -23,10 +23,10 @@ export default function Page() {
   return (
     <div className="max-w-3xl space-y-12">
       <h1 className="text-3xl font-bold sm:text-4xl">Ajustes</h1>
-      <DatosTaller inicial={config.taller} />
+      {usuario.esDueno ? <DatosTaller inicial={config.taller} /> : <p className="text-muted">Los datos del taller y las cuentas de los socios los edita el dueño.</p>}
       <ReglasTurnos inicial={config.turnos} />
       <Avisos />
-      {usuario.editaTarifas && <Socios />}
+      {usuario.esDueno && <Socios />}
     </div>
   );
 }
@@ -194,7 +194,7 @@ function Socios() {
   return (
     <section className="space-y-3">
       <h2 className="text-2xl font-bold">Socios</h2>
-      <p className="text-muted">Todos ven métricas y finanzas. &quot;Mecánico&quot; recibe los turnos por Telegram; &quot;Precios&quot; edita el tarifario y los socios.</p>
+      <p className="text-muted">Todos ven métricas y finanzas. &quot;Mecánico&quot; recibe los turnos por Telegram; &quot;Precios&quot; edita solo el tarifario. Las cuentas y los datos del taller los maneja el dueño.</p>
       {error && <Aviso tipo="error">{error}</Aviso>}
       {!lista ? <Cargando /> : (
         <ul className="divide-y divide-border rounded-md border-2 border-border bg-surface">
@@ -204,13 +204,15 @@ function Socios() {
                 <p className="font-semibold">{u.nombre} {u.id === yo.id && <span className="text-muted">(vos)</span>}</p>
                 <p className="text-sm text-muted">{u.email}</p>
                 <div className="mt-1 flex flex-wrap gap-1">
+                  {u.esDueno && <Etiqueta tono="info">Dueño</Etiqueta>}
                   {u.telegramVinculado ? <Etiqueta tono="ok">Telegram vinculado</Etiqueta> : <Etiqueta>Sin Telegram</Etiqueta>}
                   {u.estado === "suspendido" && <Etiqueta tono="error">Suspendido</Etiqueta>}
                 </div>
               </div>
               <div className="flex flex-wrap gap-3">
                 <label className="flex items-center gap-2"><input type="checkbox" className="size-5" checked={u.esMecanico} onChange={(e) => editar(u, { esMecanico: e.target.checked })} /> Mecánico</label>
-                <label className="flex items-center gap-2"><input type="checkbox" className="size-5" checked={u.editaTarifas} disabled={u.id === yo.id} onChange={(e) => editar(u, { editaTarifas: e.target.checked })} /> Precios</label>
+                {/* El dueño edita precios siempre: la casilla no aplica. */}
+                {!u.esDueno && <label className="flex items-center gap-2"><input type="checkbox" className="size-5" checked={u.editaTarifas} onChange={(e) => editar(u, { editaTarifas: e.target.checked })} /> Precios</label>}
                 {u.id !== yo.id && <Button variante="fantasma" onClick={() => editar(u, { estado: u.estado === "activo" ? "suspendido" : "activo" })}>{u.estado === "activo" ? "Suspender" : "Reactivar"}</Button>}
               </div>
             </li>
@@ -221,7 +223,7 @@ function Socios() {
         <div className="grid gap-3 rounded-md border-2 border-primary bg-surface p-4 sm:grid-cols-3">
           <Field label="Nombre" htmlFor="s-n"><Input id="s-n" value={nuevo.nombre} onChange={(e) => setNuevo({ ...nuevo, nombre: e.target.value })} /></Field>
           <Field label="Email" htmlFor="s-e"><Input id="s-e" type="email" value={nuevo.email} onChange={(e) => setNuevo({ ...nuevo, email: e.target.value })} /></Field>
-          <Field label="Contraseña inicial" htmlFor="s-p" ayuda="Al menos 10 caracteres. Que la cambie al entrar."><Input id="s-p" type="text" value={nuevo.password} onChange={(e) => setNuevo({ ...nuevo, password: e.target.value })} /></Field>
+          <Field label="Contraseña inicial" htmlFor="s-p" ayuda="Al menos 10 caracteres. Le llega por email junto con el link al panel; que la cambie al entrar."><Input id="s-p" type="text" value={nuevo.password} onChange={(e) => setNuevo({ ...nuevo, password: e.target.value })} /></Field>
           <label className="flex items-center gap-2"><input type="checkbox" className="size-5" checked={nuevo.esMecanico} onChange={(e) => setNuevo({ ...nuevo, esMecanico: e.target.checked })} /> Mecánico</label>
           <label className="flex items-center gap-2"><input type="checkbox" className="size-5" checked={nuevo.editaTarifas} onChange={(e) => setNuevo({ ...nuevo, editaTarifas: e.target.checked })} /> Precios</label>
           <div className="flex gap-3 sm:col-span-3">

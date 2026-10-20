@@ -23,7 +23,8 @@ export function NavPanel() {
     <>
       <header className="border-b border-banda-borde bg-banda text-on-banda">
         <div className="mx-auto flex max-w-5xl items-center justify-between gap-4 px-4 py-3">
-          <Marca href="/panel" sobreBanda />
+          {/* El logo siempre lleva a la portada; el panel se vuelve desde "Hoy". */}
+          <Marca sobreBanda />
           <nav aria-label="Panel" className="hidden gap-1 sm:flex">
             {lista.map((i) => (
               <Link key={i.href} href={i.href} aria-current={activo(i.href) ? "page" : undefined}

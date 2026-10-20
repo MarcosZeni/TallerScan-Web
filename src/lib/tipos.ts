@@ -83,7 +83,10 @@ export type Usuario = {
   email: string;
   esAdmin: boolean;
   esMecanico: boolean;
+  /** Permiso efectivo: el dueño lo tiene siempre. */
   editaTarifas: boolean;
+  /** Único que edita socios y datos del taller. Se asigna por consola, no desde la web. */
+  esDueno: boolean;
   telegramVinculado: boolean;
   estado: "activo" | "suspendido";
 };

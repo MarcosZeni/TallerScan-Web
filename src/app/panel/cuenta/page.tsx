@@ -53,7 +53,7 @@ export default function Page() {
         <h1 className="text-3xl font-bold sm:text-4xl">Mi cuenta</h1>
         <p className="text-muted">{usuario.nombre}, {usuario.email}</p>
         <p className="text-sm text-muted">
-          {[usuario.esAdmin && "administrador", usuario.esMecanico && "mecánico", usuario.editaTarifas && "edita precios"].filter(Boolean).join(", ")}
+          {[usuario.esDueno && "dueño", usuario.esAdmin && "administrador", usuario.esMecanico && "mecánico", usuario.editaTarifas && "edita precios"].filter(Boolean).join(", ")}
         </p>
       </div>
 

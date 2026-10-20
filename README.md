@@ -35,8 +35,8 @@ Dirección, horarios, redes, WhatsApp y precios **no** van acá: se cargan desde
 | `/panel/turnos` | Buscar turnos |
 | `/panel/metricas` | Embudo, publicidad, servicios, gancho del escaneo |
 | `/panel/finanzas` | Saldo, gastos, Pagar + comprobante, gastos mensuales |
-| `/panel/tarifas` | Precios base, tramos y redondeo (permiso de tarifas) |
-| `/panel/ajustes` | Datos del taller, reglas de turnos, avisos fallidos, socios |
+| `/panel/tarifas` | Precios base, tramos y redondeo (permiso de tarifas o dueño) |
+| `/panel/ajustes` | Reglas de turnos y avisos fallidos; datos del taller y socios solo para el dueño |
 | `/panel/cuenta` | Vincular Telegram, contraseña, salir |
 
 ## Publicidad
