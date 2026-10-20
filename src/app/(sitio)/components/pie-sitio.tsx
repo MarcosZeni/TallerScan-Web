@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link";
+import { IconoRed, type Red } from "@/components/iconos-redes";
 import { Marca } from "@/components/marca";
 import { SITE } from "@/lib/site";
 import { useSitio } from "@/lib/sitio";
@@ -10,18 +11,22 @@ import { linkWhatsApp } from "@/lib/whatsapp";
  * Pie con los datos del taller. Todo sale de la API (se edita desde Ajustes):
  * lo que no está cargado no se muestra, ni siquiera el título, para que el
  * pie nunca quede con encabezados vacíos. El acceso de los socios va en el
- * encabezado, no acá.
+ * encabezado, no acá. WhatsApp y las redes van como íconos debajo de los
+ * horarios: se reconocen de un vistazo y no alargan el pie en el celular.
  */
 export function PieSitio() {
   const { sitio } = useSitio(null);
   const t = sitio?.taller;
   const wa = linkWhatsApp(t?.whatsapp, "Hola, quería hacer una consulta.");
   const horarios = t?.horarios ?? [];
-  const redes = [
-    { href: t?.instagram, label: "Instagram" },
-    { href: t?.facebook, label: "Facebook" },
-    { href: t?.tiktok, label: "TikTok" },
-  ].filter((r) => r.href);
+  const redes = (
+    [
+      { red: "whatsapp", href: wa, label: "Escribinos por WhatsApp" },
+      { red: "instagram", href: t?.instagram, label: "Instagram" },
+      { red: "facebook", href: t?.facebook, label: "Facebook" },
+      { red: "tiktok", href: t?.tiktok, label: "TikTok" },
+    ] as { red: Red; href: string | null | undefined; label: string }[]
+  ).filter((r): r is { red: Red; href: string; label: string } => !!r.href);
 
   return (
     <footer className="mt-16 border-t border-banda-borde bg-banda text-on-banda">
@@ -37,17 +42,26 @@ export function PieSitio() {
             </p>
           )}
         </div>
-        {horarios.length > 0 && (
+        {(horarios.length > 0 || redes.length > 0) && (
           <div>
-            <p className="font-semibold">Horarios</p>
+            {horarios.length > 0 && <p className="font-semibold">Horarios</p>}
             {horarios.map((h) => <p key={h} className="text-banda-muted">{h}</p>)}
+            {redes.length > 0 && (
+              /* Área táctil de 44px por ícono; el nombre queda para lectores de pantalla y como tooltip. */
+              <ul className="mt-3 flex flex-wrap gap-1">
+                {redes.map((r) => (
+                  <li key={r.red}>
+                    <a href={r.href} target="_blank" rel="noopener noreferrer" aria-label={r.label} title={r.label}
+                      className="flex h-11 w-11 items-center justify-center rounded-md text-banda-enlace hover:bg-banda-hover">
+                      <IconoRed red={r.red} />
+                    </a>
+                  </li>
+                ))}
+              </ul>
+            )}
           </div>
         )}
         <div className="space-y-1 sm:col-start-3">
-          {wa && <p><a href={wa} target="_blank" rel="noopener noreferrer" className="font-semibold text-banda-enlace underline-offset-4 hover:underline">Escribinos por WhatsApp</a></p>}
-          {redes.map((r) => (
-            <p key={r.label}><a href={r.href} target="_blank" rel="noopener noreferrer" className="text-banda-enlace underline-offset-4 hover:underline">{r.label}</a></p>
-          ))}
           <p><Link href="/mi-turno" className="text-banda-muted underline-offset-4 hover:underline">Ver mi turno</Link></p>
           <p><Link href="/ubicacion" className="text-banda-muted underline-offset-4 hover:underline">Dónde estamos</Link></p>
           <p><Link href="/nosotros" className="text-banda-muted underline-offset-4 hover:underline">Nosotros</Link></p>
