@@ -30,13 +30,16 @@ Dirección, horarios, redes, WhatsApp y precios **no** van acá: se cargan desde
 | `/mi-turno` | Buscar los turnos propios con patente + WhatsApp o email |
 | `/mi-turno?c=<código>` | Estado del turno, cancelar o cambiar el día (el link llega por WhatsApp y email) |
 | `/ubicacion` | Dirección, horarios, contacto |
+| `/nosotros` | Quiénes somos (texto desde Ajustes) |
+| `/privacidad` | Política de privacidad (Ley 25.326) |
 | `/ingresar` | Login de los socios |
 | `/panel` | Hoy: abrir el día ("Estoy disponible"), bloques, cupos y turnos |
 | `/panel/turnos` | Buscar turnos |
 | `/panel/metricas` | Embudo, publicidad, servicios, gancho del escaneo |
 | `/panel/finanzas` | Saldo, gastos, Pagar + comprobante, gastos mensuales |
 | `/panel/tarifas` | Precios base, tramos y redondeo (permiso de tarifas o dueño) |
-| `/panel/ajustes` | Reglas de turnos y avisos fallidos; datos del taller y socios solo para el dueño |
+| `/panel/socios` | Cuentas de los socios (solo el dueño) |
+| `/panel/ajustes` | Reglas de turnos y avisos fallidos; datos del taller (y texto de "Nosotros") solo para el dueño |
 | `/panel/cuenta` | Vincular Telegram, contraseña, salir |
 
 ## Publicidad
