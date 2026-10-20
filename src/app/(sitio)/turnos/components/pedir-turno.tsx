@@ -207,7 +207,7 @@ export function PedirTurno({ inicial }: { inicial: Sitio | null }) {
               {tipo === "hoy" ? (
                 <div className="mt-5">
                   {disp.hoy.estado === "sin_abrir" && (
-                    <Aviso tipo="atencion" titulo="Todavía no cargamos los horarios de hoy">Probá en un rato, o tocá &quot;Elegir días&quot; y marcá cuándo podés.</Aviso>
+                    <Aviso tipo="atencion" titulo="Los turnos del día se habilitan de 9 a 18 h">Según la disponibilidad del mecánico. Probá en un rato, o tocá &quot;Elegir días&quot; y marcá cuándo podés.</Aviso>
                   )}
                   {disp.hoy.estado === "cerrada" && <Aviso tipo="atencion" titulo="Hoy no hay turnos">Tocá &quot;Elegir días&quot; y marcá cuándo podés.</Aviso>}
                   {disp.hoy.estado === "abierta" && disp.hoy.bloques.length === 0 && (
