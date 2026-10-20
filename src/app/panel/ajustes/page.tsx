@@ -71,7 +71,7 @@ function DatosTaller({ inicial }: { inicial: Taller }) {
       <Field label="Horarios de atención" htmlFor="t-horarios" ayuda="Una línea por renglón. Ej.: Lunes a viernes de 9 a 18">
         <Textarea id="t-horarios" value={horarios} onChange={(e) => setHorarios(e.target.value)} />
       </Field>
-      <Field label='Página "Nosotros"' htmlFor="t-nosotros" ayuda="Quiénes son y cómo trabajan. Un renglón vacío separa los párrafos. Sin nombres de los padres ni de sus talleres.">
+      <Field label='Página "Nosotros"' htmlFor="t-nosotros" ayuda="Quiénes son y cómo trabajan. Un renglón vacío separa los párrafos; **así** va en negrita. Sin nombres de los padres ni de sus talleres.">
         <Textarea id="t-nosotros" rows={10} value={t.nosotros} onChange={(e) => setT({ ...t, nosotros: e.target.value })} />
       </Field>
       {msg && <Aviso tipo={msg.ok ? "ok" : "error"}>{msg.t}</Aviso>}
