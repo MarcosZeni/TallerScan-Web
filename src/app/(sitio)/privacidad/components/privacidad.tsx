@@ -19,6 +19,7 @@ export function Privacidad({ inicial }: { inicial: Sitio | null }) {
     <div className="mx-auto max-w-3xl px-4 py-10">
       <h1 className="text-4xl font-bold sm:text-5xl">Privacidad</h1>
       <p className="mt-4 text-lg text-muted">Qué guardamos cuando usás {SITE.name}, para qué y cómo pedir que lo borremos.</p>
+      {/* Sin nombrar proveedores (emails, CDN): es infraestructura nuestra de cara al cliente. */}
 
       <div className="mt-8 space-y-8 text-lg leading-relaxed">
         <section>
@@ -32,11 +33,7 @@ export function Privacidad({ inicial }: { inicial: Sitio | null }) {
             <li>Para mandarte la confirmación y los avisos del turno por email.</li>
             <li>Para reconocer el auto si volvés (por ejemplo, para descontarte el escaneo si después hacés el arreglo con nosotros).</li>
           </ul>
-          <p className="mt-2">No vendemos ni cedemos tus datos a nadie. No mandamos publicidad.</p>
-        </section>
-        <section>
-          <h2 className="text-2xl font-bold">Quién más los ve</h2>
-          <p className="mt-2">Usamos servicios para mandar los emails (Resend) y para proteger el sitio (Cloudflare). Ven lo mínimo que necesitan para eso: tu email para enviarte el aviso, y tu conexión para que la página cargue segura. El sistema de turnos corre en un servidor propio en Argentina.</p>
+          <p className="mt-2">No vendemos ni cedemos tus datos a nadie.</p>
         </section>
         <section>
           <h2 className="text-2xl font-bold">Cuánto tiempo</h2>
@@ -49,7 +46,7 @@ export function Privacidad({ inicial }: { inicial: Sitio | null }) {
         </section>
         <section>
           <h2 className="text-2xl font-bold">Cookies y estadísticas</h2>
-          <p className="mt-2">No usamos cookies de seguimiento ni herramientas de terceros para medir visitas. Contamos las visitas nosotros, sin identificarte: qué página se abrió y desde dónde llegaste (por ejemplo, desde Instagram). Tu navegador guarda, solo en tu teléfono o computadora, los códigos de tus últimos turnos para que &quot;Mi turno&quot; los encuentre rápido; podés borrarlos limpiando los datos del sitio.</p>
+          <p className="mt-2">No usamos cookies de seguimiento ni herramientas de terceros para medir visitas. Contamos las visitas nosotros, sin identificarte, y desde dónde llegaste (por ejemplo, desde Instagram). Es una métrica interna, para saber qué nos trae clientes. Tu navegador guarda, solo en tu teléfono o computadora, los códigos de tus últimos turnos para que &quot;Mi turno&quot; los encuentre rápido; podés borrarlos limpiando los datos del sitio.</p>
         </section>
       </div>
     </div>
