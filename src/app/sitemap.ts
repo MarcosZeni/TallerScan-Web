@@ -12,6 +12,8 @@ export default function sitemap(): MetadataRoute.Sitemap {
     { ruta: "/tarifas", prioridad: 0.9 },
     { ruta: "/turnos", prioridad: 0.8 },
     { ruta: "/ubicacion", prioridad: 0.7 },
+    { ruta: "/nosotros", prioridad: 0.6 },
+    { ruta: "/privacidad", prioridad: 0.2 },
   ];
   return paginas.map((p) => ({ url: `${SITE.url}${p.ruta}`, changeFrequency: "weekly", priority: p.prioridad }));
 }

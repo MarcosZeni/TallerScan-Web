@@ -17,7 +17,13 @@ export function NavPanel() {
   const { usuario } = useUsuario();
   const path = usePathname().replace(/\/$/, "") || "/panel";
   const activo = (href: string) => (href === "/panel" ? path === "/panel" : path.startsWith(href));
-  const lista = usuario.editaTarifas ? [...items.slice(0, 4), { href: "/panel/tarifas", label: "Precios", corto: "Precios" }, items[4]] : items;
+  // Precios solo para quien edita el tarifario; Socios solo para el dueño. Ajustes siempre al final.
+  const lista = [
+    ...items.slice(0, 4),
+    ...(usuario.editaTarifas ? [{ href: "/panel/tarifas", label: "Precios", corto: "Precios" }] : []),
+    ...(usuario.esDueno ? [{ href: "/panel/socios", label: "Socios", corto: "Socios" }] : []),
+    items[4],
+  ];
 
   return (
     <>

@@ -11,6 +11,8 @@ export type Taller = {
   facebook: string;
   tiktok: string;
   emailContacto: string;
+  /** Página "Nosotros": párrafos separados por una línea en blanco. */
+  nosotros: string;
 };
 
 export type ServicioPublico = {

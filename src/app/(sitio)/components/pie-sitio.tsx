@@ -50,6 +50,8 @@ export function PieSitio() {
           ))}
           <p><Link href="/mi-turno" className="text-banda-muted underline-offset-4 hover:underline">Ver mi turno</Link></p>
           <p><Link href="/ubicacion" className="text-banda-muted underline-offset-4 hover:underline">Dónde estamos</Link></p>
+          <p><Link href="/nosotros" className="text-banda-muted underline-offset-4 hover:underline">Nosotros</Link></p>
+          <p><Link href="/privacidad" className="text-banda-muted underline-offset-4 hover:underline">Privacidad</Link></p>
         </div>
       </div>
       {/* La localidad sale de Ajustes, como el resto de los datos del taller. */}
