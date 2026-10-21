@@ -241,3 +241,6 @@ export type Notificacion = {
   turnoId: number | null;
   creado: string;
 };
+
+/** Foto del taller (página "Nosotros"). La imagen se pide aparte: ver `urlFoto` en lib/fotos. */
+export type Foto = { id: number; texto: string | null; ancho: number; alto: number };

@@ -5,6 +5,7 @@ import { Cargando } from "@/components/ui/aviso";
 import { ButtonLink } from "@/components/ui/button";
 import { registrarVisita } from "@/lib/atribucion";
 import { useSitio } from "@/lib/sitio";
+import { Galeria } from "./galeria";
 import type { Sitio } from "@/lib/tipos";
 
 /**
@@ -29,6 +30,7 @@ export function Nosotros({ inicial }: { inicial: Sitio | null }) {
           {parrafos.map((p, i) => <p key={i}>{conNegritas(p)}</p>)}
         </div>
       )}
+      {t && <Galeria />}
       <div className="mt-10 flex flex-wrap gap-3">
         <ButtonLink href="/turnos" variante="accion">Pedir turno</ButtonLink>
         <ButtonLink href="/tarifas" variante="secundario">Ver precios</ButtonLink>

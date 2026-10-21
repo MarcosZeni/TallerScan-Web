@@ -6,6 +6,7 @@ import { Button } from "@/components/ui/button";
 import { Field, Input, Textarea } from "@/components/ui/field";
 import { api, mensajeDe } from "@/lib/api";
 import { siVencio, useUsuario } from "@/lib/sesion";
+import { FotosTaller } from "./fotos-taller";
 import type { ConfigCompleta, Notificacion, Taller, TurnosConfig } from "@/lib/tipos";
 
 export default function Page() {
@@ -24,6 +25,7 @@ export default function Page() {
     <div className="max-w-3xl space-y-12">
       <h1 className="text-3xl font-bold sm:text-4xl">Ajustes</h1>
       {usuario.esDueno ? <DatosTaller inicial={config.taller} /> : <p className="text-muted">Los datos del taller los edita el dueño. Las cuentas de los socios están en la pestaña &quot;Socios&quot;, también del dueño.</p>}
+      <FotosTaller />
       <ReglasTurnos inicial={config.turnos} />
       <Avisos />
     </div>
