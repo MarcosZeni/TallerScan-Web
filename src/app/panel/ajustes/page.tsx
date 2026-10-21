@@ -7,6 +7,7 @@ import { Field, Input, Textarea } from "@/components/ui/field";
 import { api, mensajeDe } from "@/lib/api";
 import { siVencio, useUsuario } from "@/lib/sesion";
 import { FotosTaller } from "./fotos-taller";
+import { HorarioFijoEditor } from "./horario-fijo";
 import type { ConfigCompleta, Notificacion, Taller, TurnosConfig } from "@/lib/tipos";
 
 export default function Page() {
@@ -88,15 +89,26 @@ function ReglasTurnos({ inicial }: { inicial: TurnosConfig }) {
   const [c, setC] = useState(inicial);
   const [avisos, setAvisos] = useState(inicial.minutosAviso.join(", "));
   const { msg, guardar } = useGuardar<TurnosConfig>("/api/v1/admin/config/turnos");
-  const horaCampo = (k: keyof TurnosConfig, label: string) => (
-    <Field label={label} htmlFor={`c-${k}`}>
+  const horaCampo = (k: keyof TurnosConfig, label: string, ayuda?: string) => (
+    <Field label={label} htmlFor={`c-${k}`} ayuda={ayuda}>
       <Input id={`c-${k}`} type="time" value={c[k] as string} onChange={(e) => setC({ ...c, [k]: e.target.value })} />
     </Field>
   );
 
+  // Los horarios fijos se mandan ordenados (la API también los ordena) y quedan así en pantalla.
+  const guardarTodo = () => {
+    const ordenados = [...c.horarioFijo.bloques].sort((a, b) => a.inicio.localeCompare(b.inicio));
+    setC({ ...c, horarioFijo: { ...c.horarioFijo, bloques: ordenados } });
+    return guardar({
+      ...c,
+      horarioFijo: { ...c.horarioFijo, bloques: ordenados },
+      minutosAviso: avisos.split(/[,\s]+/).map(Number).filter((n) => n > 0),
+    });
+  };
+
   return (
     <section className="space-y-4">
-      <h2 className="text-2xl font-bold">Turnos</h2>
+      <h2 className="text-2xl font-bold">Reglas de turnos</h2>
       <div>
         <p className="mb-2 font-semibold">Días que se pueden pedir para adelante</p>
         <div className="flex flex-wrap gap-2">
@@ -106,6 +118,7 @@ function ReglasTurnos({ inicial }: { inicial: TurnosConfig }) {
               className={`min-h-11 min-w-14 rounded-md border-2 font-semibold ${c.diasSemana.includes(i) ? "border-primary bg-primary text-on-primary" : "border-border"}`}>{d}</button>
           ))}
         </div>
+        <p className="mt-2 text-sm text-muted">Son los días de atención: se pueden pedir para adelante y la agenda de hoy se abre sola (ver &quot;Horario fijo&quot;).</p>
       </div>
       <div className="grid grid-cols-2 gap-4 sm:grid-cols-4">
         {horaCampo("mananaDesde", "Mañana desde")}
@@ -130,8 +143,30 @@ function ReglasTurnos({ inicial }: { inicial: TurnosConfig }) {
           <Input id="c-gancho" inputMode="numeric" value={c.diasGancho} onChange={(e) => setC({ ...c, diasGancho: Number(e.target.value.replace(/\D/g, "")) || 30 })} />
         </Field>
       </div>
+
+      <HorarioFijoEditor valor={c.horarioFijo} onChange={(horarioFijo) => setC({ ...c, horarioFijo })} />
+
+      <div className="space-y-3 rounded-md border-2 border-border bg-surface p-4">
+        <div>
+          <h3 className="text-xl font-bold">Noche y mañana</h3>
+          <p className="text-muted">De noche no te llegan avisos de Telegram: esperan y salen a la mañana, después del resumen. A los clientes los emails les salen igual. Apagado, todo funciona como siempre.</p>
+        </div>
+        <label className="flex min-h-11 cursor-pointer items-center gap-3">
+          <input type="checkbox" className="size-6 accent-[var(--color-primary)]" checked={c.silencioActivo}
+            onChange={(e) => setC({ ...c, silencioActivo: e.target.checked })} />
+          <span className="font-semibold">Silencio de noche y resumen a la mañana</span>
+        </label>
+        {c.silencioActivo && (
+          <div className="grid gap-4 sm:grid-cols-3">
+            {horaCampo("silencioDesde", "Silencio desde las", "Desde esta hora no te llegan turnos nuevos, re-avisos ni cancelaciones. Se guardan y te llegan a la mañana.")}
+            {horaCampo("resumenHora", "Resumen de la mañana a las", "Te llega cómo abrió la agenda de hoy y cuántas solicitudes tenés. Ahí termina el silencio.")}
+            {horaCampo("reservaHoyDesde", "Reservas de hoy desde las", "Antes de esta hora el cliente no toma un horario de hoy: lo solicita y vos lo confirmás, sin apuro. Así no se libera solo mientras dormís.")}
+          </div>
+        )}
+      </div>
+
       {msg && <Aviso tipo={msg.ok ? "ok" : "error"}>{msg.t}</Aviso>}
-      <Button variante="primario" onClick={() => guardar({ ...c, minutosAviso: avisos.split(/[,\s]+/).map(Number).filter((n) => n > 0) })}>Guardar reglas de turnos</Button>
+      <Button variante="primario" onClick={guardarTodo}>Guardar reglas de turnos</Button>
     </section>
   );
 }

@@ -8,7 +8,7 @@ import { Button, ButtonLink } from "@/components/ui/button";
 import { Field, Input, Select, Textarea } from "@/components/ui/field";
 import { ApiError, api, mensajeDe } from "@/lib/api";
 import { capturarOrigen, registrarVisita } from "@/lib/atribucion";
-import { fechaCorta, fechaLarga, formatoPesos, hora, rangoPesos } from "@/lib/format";
+import { fechaCorta, fechaLarga, formatoPesos, hora, horaCorta, rangoPesos } from "@/lib/format";
 import { useSitio } from "@/lib/sitio";
 import type { Disponibilidad, Opcion, Sitio } from "@/lib/tipos";
 import { SelectorOpciones } from "@/components/selector-opciones";
@@ -47,6 +47,10 @@ export function PedirTurno({ inicial }: { inicial: Sitio | null }) {
   const tipo = tipoElegido ?? (disp && disp.hoy.bloques.length === 0 ? "dia" : "hoy");
   const [bloqueId, setBloqueId] = useState<number | null>(null);
   const [opciones, setOpciones] = useState<Opcion[]>([]);
+  // Antes de la hora de reserva (8:30) los horarios de hoy se ven pero no se toman: hoy se
+  // pide como un día más del turno express, por la mañana o por la tarde, y se confirma después.
+  const solicitud = disp?.hoy.soloSolicitud === true;
+  const tipoEnvio: "hoy" | "dia" = tipo === "hoy" && !solicitud ? "hoy" : "dia";
 
   const [datos, setDatos] = useState({ nombre: "", whatsapp: "", email: "", marca: "", modelo: "", anio: "", patente: "", descripcion: "", conocio: "" });
   const [enviando, setEnviando] = useState(false);
@@ -70,7 +74,7 @@ export function PedirTurno({ inicial }: { inicial: Sitio | null }) {
   const set = (k: keyof typeof datos) => (e: { target: { value: string } }) => setDatos((d) => ({ ...d, [k]: e.target.value }));
 
   const paso1Ok = elegidos.length > 0 || (conOtro && otro.trim().length >= 2);
-  const paso2Ok = tipo === "hoy" ? bloqueId !== null : opciones.length > 0;
+  const paso2Ok = tipoEnvio === "hoy" ? bloqueId !== null : opciones.length > 0;
 
   async function enviar(ev: React.FormEvent) {
     ev.preventDefault();
@@ -81,9 +85,9 @@ export function PedirTurno({ inicial }: { inicial: Sitio | null }) {
       const r = await api<{ id: number; codigo: string }>("/api/v1/turnos", {
         method: "POST",
         json: {
-          tipo,
-          bloqueId: tipo === "hoy" ? bloqueId : null,
-          opciones: tipo === "dia" ? opciones : null,
+          tipo: tipoEnvio,
+          bloqueId: tipoEnvio === "hoy" ? bloqueId : null,
+          opciones: tipoEnvio === "dia" ? opciones : null,
           servicios: elegidos,
           otro: conOtro ? otro : null,
           ...datos,
@@ -99,7 +103,7 @@ export function PedirTurno({ inicial }: { inicial: Sitio | null }) {
     } catch (e) {
       const campo = e instanceof ApiError ? e.campo : null;
       // Un horario que se ocupó mientras completaba: volver a elegir.
-      if (e instanceof ApiError && (e.codigo === "horario_lleno" || e.codigo === "horario_no_disponible")) {
+      if (e instanceof ApiError && (e.codigo === "horario_lleno" || e.codigo === "horario_no_disponible" || e.codigo === "hoy_solo_solicitud" || e.codigo === "hoy_cerrado")) {
         setBloqueId(null);
         setPaso(2);
         recargarDisp();
@@ -112,7 +116,7 @@ export function PedirTurno({ inicial }: { inicial: Sitio | null }) {
   }
 
   if (listo) {
-    const cuando = tipo === "hoy"
+    const cuando = tipoEnvio === "hoy"
       ? `hoy a las ${hora(disp?.hoy.bloques.find((b) => b.id === bloqueId)?.inicio)}`
       : null;
     return (
@@ -213,7 +217,25 @@ export function PedirTurno({ inicial }: { inicial: Sitio | null }) {
                   {disp.hoy.estado === "abierta" && disp.hoy.bloques.length === 0 && (
                     <Aviso tipo="atencion" titulo="No quedan horarios libres hoy">Tocá &quot;Elegir días&quot; y marcá cuándo podés.</Aviso>
                   )}
-                  {disp.hoy.bloques.length > 0 && (
+                  {disp.hoy.bloques.length > 0 && solicitud && (
+                    <>
+                      <Aviso titulo={`Desde las ${horaCorta(disp.hoy.reservaDesde)} se pueden tomar directo.`}>
+                        Ahora podés solicitarlo y el mecánico te confirma por WhatsApp.
+                      </Aviso>
+                      <p className="mb-3 mt-5 text-muted">Horarios de hoy, {fechaLarga(disp.hoy.fecha)} (todavía no se pueden tomar):</p>
+                      <ul className="grid grid-cols-3 gap-2 sm:grid-cols-5" aria-label="Horarios de hoy, solo para ver">
+                        {disp.hoy.bloques.map((b) => (
+                          <li key={b.id} className="tabular flex min-h-12 items-center justify-center rounded-md border-2 border-border bg-background font-display text-xl font-bold text-muted">
+                            {hora(b.inicio)}
+                          </li>
+                        ))}
+                      </ul>
+                      <p className="mb-3 mt-6 font-semibold">¿Te sirve hoy? Elegí mañana o tarde y lo solicitás:</p>
+                      <SelectorOpciones disp={{ ...disp, dias: disp.dias.filter((d) => d.fecha === disp.hoy.fecha) }} valor={opciones} onChange={setOpciones} />
+                      <p className="mt-4 text-muted">Si preferís otro día, tocá &quot;Elegir días&quot; y marcá cuándo podés.</p>
+                    </>
+                  )}
+                  {disp.hoy.bloques.length > 0 && !solicitud && (
                     <>
                       <p className="mb-3 text-muted">Horarios libres para hoy, {fechaLarga(disp.hoy.fecha)}:</p>
                       <div className="grid grid-cols-3 gap-2 sm:grid-cols-5">
@@ -289,7 +311,7 @@ export function PedirTurno({ inicial }: { inicial: Sitio | null }) {
             <p>{[...seleccion.map((s) => s.nombre), ...(conOtro && otro ? [`Otro: ${otro}`] : [])].join(", ")}</p>
             {seleccion.length > 0 && <p className="tabular">Mano de obra estimada: {rangoPesos(totalMin, totalMax)}</p>}
             <p className="text-muted">
-              {tipo === "hoy"
+              {tipoEnvio === "hoy"
                 ? `Hoy a las ${hora(disp?.hoy.bloques.find((b) => b.id === bloqueId)?.inicio)}`
                 : `Podés: ${opciones.map((o) => `${fechaCorta(o.fecha)} ${o.franja === "manana" ? "a la mañana" : "a la tarde"}`).join(", ")}`}
             </p>

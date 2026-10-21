@@ -41,7 +41,16 @@ export type Opcion = { fecha: string; franja: "manana" | "tarde" };
 export type BloqueLibre = { id: number; inicio: string; fin: string; libres: number };
 
 export type Disponibilidad = {
-  hoy: { fecha: string; estado: "sin_abrir" | "abierta" | "cerrada"; bloques: BloqueLibre[] };
+  hoy: {
+    fecha: string;
+    estado: "sin_abrir" | "abierta" | "cerrada";
+    bloques: BloqueLibre[];
+    /** Desde esta hora ("08:30") los horarios de hoy se reservan directo. Puede faltar si la API es vieja. */
+    reservaDesde?: string;
+    /** Antes de `reservaDesde`: los horarios de hoy se ven pero solo se pueden solicitar (turno express). */
+    soloSolicitud?: boolean;
+  };
+  /** Cuando `hoy.soloSolicitud`, el primer día es hoy, con las franjas que todavía tienen lugar. */
   dias: { fecha: string; manana: boolean; tarde: boolean }[];
   franjas: Franjas;
 };
@@ -152,6 +161,11 @@ export type ServicioAdmin = {
 export type Tramo = { hasta: number | null; porcentaje: number };
 export type PreciosConfig = { tramos: Tramo[]; redondeo: number; escaneoParteMecanico: number };
 
+export type BloqueFijo = { inicio: string; cupo: number };
+
+/** Horario con el que la agenda de hoy se abre sola cada día de atención. */
+export type HorarioFijo = { activo: boolean; bloqueMinutos: number; bloques: BloqueFijo[] };
+
 export type TurnosConfig = {
   diasAnticipacion: number;
   diasSemana: number[];
@@ -165,6 +179,15 @@ export type TurnosConfig = {
   minutosLiberar: number;
   horaRecordatorio: string;
   diasGancho: number;
+  horarioFijo: HorarioFijo;
+  /** Llave del silencio nocturno, el resumen de la mañana y "solicitar en vez de reservar". Apagada: todo como antes. */
+  silencioActivo: boolean;
+  /** Desde esta hora ("20:00") no llegan Telegram a los socios: salen a la mañana, tras el resumen. */
+  silencioDesde: string;
+  /** Hora del resumen de la mañana por Telegram; termina el silencio. */
+  resumenHora: string;
+  /** Antes de esta hora los horarios de hoy se solicitan en vez de reservarse. */
+  reservaHoyDesde: string;
 };
 
 /** `precios` (tramos de ganancia) solo llega al dueño; para el resto viene null. */

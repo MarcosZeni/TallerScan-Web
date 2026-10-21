@@ -29,6 +29,9 @@ export const fechaCorta = (iso: string) =>
 /** "09:00:00" → "09:00". */
 export const hora = (h: string | null | undefined) => (h ? h.slice(0, 5) : "");
 
+/** "08:30" → "8:30": como se dice en voz alta, sin el cero de la izquierda. */
+export const horaCorta = (h: string | null | undefined) => (h ? `${Number(h.slice(0, 2))}${h.slice(2, 5)}` : "");
+
 export const franjaTexto = (f: string | null) => (f === "manana" ? "por la mañana" : f === "tarde" ? "por la tarde" : "");
 
 export const ESTADOS: Record<string, string> = {

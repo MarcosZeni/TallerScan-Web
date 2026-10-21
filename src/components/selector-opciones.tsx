@@ -14,6 +14,9 @@ const FRANJAS = ["manana", "tarde"] as const;
  * Una fila por día: "Todo el día" marca las dos franjas de una, y después
  * mañana y tarde por separado. Botones grandes y con texto, no un calendario:
  * es más fácil en el celular y para cualquier edad.
+ *
+ * De madrugada la API suma hoy como primer día, solo con las franjas que
+ * todavía tienen lugar (`manana`/`tarde` de cada día): las otras quedan apagadas.
  */
 export function SelectorOpciones({ disp, valor, onChange }: {
   disp: Disponibilidad;
@@ -26,8 +29,8 @@ export function SelectorOpciones({ disp, valor, onChange }: {
   const toggle = (o: Opcion) =>
     onChange(marcada(o) ? valor.filter((v) => !igual(v, o)) : lleno ? valor : [...valor, o]);
 
-  const toggleDia = (fecha: string) => {
-    const delDia = FRANJAS.map((franja) => ({ fecha, franja }));
+  const toggleDia = (fecha: string, franjas: readonly (typeof FRANJAS)[number][]) => {
+    const delDia = franjas.map((franja) => ({ fecha, franja }));
     const completo = delDia.every(marcada);
     if (completo) onChange(valor.filter((v) => v.fecha !== fecha));
     else onChange([...valor, ...delDia.filter((o) => !marcada(o))].slice(0, MAX_OPCIONES));
@@ -40,27 +43,37 @@ export function SelectorOpciones({ disp, valor, onChange }: {
     <div>
       <ul className="space-y-2">
         {disp.dias.map((d) => {
-          const completo = FRANJAS.every((franja) => marcada({ fecha: d.fecha, franja }));
-          const faltan = FRANJAS.filter((franja) => !marcada({ fecha: d.fecha, franja })).length;
+          // Las franjas que se pueden elegir ese día (los días de adelante tienen las dos).
+          const posibles = FRANJAS.filter((f) => d[f]);
+          const esHoy = d.fecha === disp.hoy.fecha;
+          const completo = posibles.length > 0 && posibles.every((franja) => marcada({ fecha: d.fecha, franja }));
+          const faltan = posibles.filter((franja) => !marcada({ fecha: d.fecha, franja })).length;
+          const sinLugar = !completo && valor.length + faltan > MAX_OPCIONES;
+          const titulo = `${esHoy ? "Hoy, " : ""}${fechaCorta(d.fecha)}`;
           return (
             <li key={d.fecha} className="rounded-md border-2 border-border bg-surface p-2">
-              <label className={`flex min-h-11 cursor-pointer items-center gap-3 rounded px-1 ${!completo && valor.length + faltan > MAX_OPCIONES ? "opacity-50" : ""}`}>
-                <input type="checkbox" className="size-6 accent-[var(--color-primary)]" checked={completo}
-                  disabled={!completo && valor.length + faltan > MAX_OPCIONES}
-                  onChange={() => toggleDia(d.fecha)} />
-                <span className="font-semibold capitalize">{fechaCorta(d.fecha)}</span>
-                <span className="text-sm text-muted">Todo el día</span>
-              </label>
+              {posibles.length === FRANJAS.length ? (
+                <label className={`flex min-h-11 cursor-pointer items-center gap-3 rounded px-1 ${sinLugar ? "opacity-50" : ""}`}>
+                  <input type="checkbox" className="size-6 accent-[var(--color-primary)]" checked={completo}
+                    disabled={sinLugar}
+                    onChange={() => toggleDia(d.fecha, posibles)} />
+                  <span className="font-semibold capitalize">{titulo}</span>
+                  <span className="text-sm text-muted">Todo el día</span>
+                </label>
+              ) : (
+                <p className="flex min-h-11 items-center px-1 font-semibold capitalize">{titulo}</p>
+              )}
               <div className="mt-2 grid grid-cols-2 gap-2">
                 {FRANJAS.map((f) => {
                   const o = { fecha: d.fecha, franja: f };
                   const activo = marcada(o);
+                  const hay = d[f];
                   return (
                     <button key={f} type="button" aria-pressed={activo} onClick={() => toggle(o)}
-                      disabled={!activo && lleno}
+                      disabled={!hay || (!activo && lleno)}
                       className={`min-h-12 rounded-md border-2 px-2 text-left disabled:opacity-40 ${activo ? "border-primary bg-primary text-on-primary" : "border-border bg-background hover:border-primary"}`}>
                       <span className="block font-semibold">{activo ? "✓ " : ""}{f === "manana" ? "Mañana" : "Tarde"}</span>
-                      <span className="tabular text-sm">{hora(disp.franjas[f].desde)} a {hora(disp.franjas[f].hasta)}</span>
+                      <span className="tabular text-sm">{hay ? `${hora(disp.franjas[f].desde)} a ${hora(disp.franjas[f].hasta)}` : "Sin lugar hoy"}</span>
                     </button>
                   );
                 })}
