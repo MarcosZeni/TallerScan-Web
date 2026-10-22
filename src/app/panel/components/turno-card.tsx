@@ -84,7 +84,7 @@ export function TurnoCard({ turno, onCambio, mostrarFecha = false }: { turno: Tu
       {t.descripcion && <p className="mt-1 text-muted">“{t.descripcion}”</p>}
       <p className="tabular mt-1 text-muted">
         {t.montoCobrado != null
-          ? <>Cobrado {formatoPesos(t.montoCobrado)} (mecánico {formatoPesos(t.parteMecanico ?? 0)}, ganancia {formatoPesos(t.parteDesarrollador ?? 0)}{t.descuentoEscaneo > 0 ? `, se descontó el escaneo de ${formatoPesos(t.descuentoEscaneo)}` : ""})</>
+          ? <>Cobrado {formatoPesos(t.montoCobrado)} (mecánico {formatoPesos(t.parteMecanico ?? 0)}{t.parteDesarrollador != null ? `, ganancia ${formatoPesos(t.parteDesarrollador)}` : ""}{t.descuentoEscaneo > 0 ? `, se descontó el escaneo de ${formatoPesos(t.descuentoEscaneo)}` : ""})</>
           : t.precioMax > 0 ? <>Estimado {rangoPesos(t.precioMin, t.precioMax)}</> : null}
       </p>
       {t.origen && <p className="text-sm text-muted">Publicidad: {[t.origen, t.campania].filter(Boolean).join(" / ")}</p>}

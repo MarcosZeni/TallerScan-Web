@@ -219,7 +219,7 @@ export type Metricas = {
   tasaLiberados: number;
   ingresos: number;
   ticketPromedio: number;
-  gananciaDesarrollador: number;
+  gananciaDesarrollador: number | null; // null: no es el dueño
   parteMecanico: number;
   origenes: { origen: string; campania: string; visitas: number; pedidos: number; realizados: number; ingresos: number; gasto: number }[];
   servicios: { nombre: string; pedidos: number; realizados: number }[];
@@ -253,7 +253,7 @@ export type ResumenFinanzas = {
   gastosMes: number;
   pendientesMonto: number;
   pendientesCantidad: number;
-  gananciaDesarrolladorMes: number;
+  gananciaDesarrolladorMes: number | null; // null: no es el dueño
   parteMecanicoMes: number;
   meses: { periodo: string; ingresos: number; gastos: number; resultado: number; acumulado: number }[];
   gastosPorCategoria: Conteo[];

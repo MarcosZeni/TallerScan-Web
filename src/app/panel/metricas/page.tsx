@@ -45,7 +45,10 @@ function Tablero({ m }: { m: Metricas }) {
     <>
       <section className="grid grid-cols-2 gap-3 lg:grid-cols-4">
         <Dato titulo="Ingresos" valor={formatoPesos(m.ingresos)} pie={`${m.realizados} trabajos, promedio ${formatoPesos(m.ticketPromedio)}`} />
-        <Dato titulo="Ganancia (tramos)" valor={formatoPesos(m.gananciaDesarrollador)} pie={`Mecánico: ${formatoPesos(m.parteMecanico)}`} />
+        {/* La ganancia del dueño la manda la API solo al dueño; los socios ven su parte. */}
+        {m.gananciaDesarrollador != null
+          ? <Dato titulo="Ganancia (tramos)" valor={formatoPesos(m.gananciaDesarrollador)} pie={`Mecánico: ${formatoPesos(m.parteMecanico)}`} />
+          : <Dato titulo="Parte del mecánico" valor={formatoPesos(m.parteMecanico)} pie={`${m.realizados} trabajos`} />}
         <Dato titulo="Pedidos de turno" valor={String(m.pedidos)} pie={`${m.visitas} visitas a la web`} />
         <Dato titulo="Tasa de éxito" valor={pct(m.tasaExito)} pie="de los pedidos se hicieron" />
       </section>

@@ -41,7 +41,8 @@ export default function Page() {
         <Tile t="Por pagar" v={resumen.pendientesMonto} pie={`${resumen.pendientesCantidad} gasto${resumen.pendientesCantidad === 1 ? "" : "s"}`} />
       </section>
       <p className="tabular -mt-6 text-muted">
-        Este mes: parte del mecánico {formatoPesos(resumen.parteMecanicoMes)}, ganancia por tramos {formatoPesos(resumen.gananciaDesarrolladorMes)}.
+        Este mes: parte del mecánico {formatoPesos(resumen.parteMecanicoMes)}
+        {resumen.gananciaDesarrolladorMes != null && <>, ganancia por tramos {formatoPesos(resumen.gananciaDesarrolladorMes)}</>}.
       </p>
 
       {pendientes.length > 0 && (
