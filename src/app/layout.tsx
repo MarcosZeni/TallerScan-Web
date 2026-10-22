@@ -13,7 +13,7 @@ const barlowCondensed = Barlow_Condensed({ subsets: ["latin"], weight: ["600", "
 export const metadata: Metadata = {
   metadataBase: new URL(SITE.url),
   title: { default: `${SITE.name} | Mecánica con precios a la vista`, template: `%s | ${SITE.name}` },
-  description: "Taller mecánico con precios de mano de obra publicados, escaneo computarizado y turnos online.",
+  description: "Taller mecánico con precios publicados, escaneo computarizado y turnos online.",
 };
 
 export const viewport: Viewport = {

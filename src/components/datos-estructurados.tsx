@@ -19,7 +19,7 @@ export function DatosEstructurados({ sitio }: { sitio: Sitio | null }) {
     name: SITE.name,
     url: SITE.url,
     image: `${SITE.url}/opengraph-image.png`,
-    description: "Taller mecánico con precios de mano de obra publicados, escaneo computarizado y turnos online.",
+    description: "Taller mecánico con precios publicados, escaneo computarizado y turnos online.",
     priceRange: "$$",
     currenciesAccepted: "ARS",
   };

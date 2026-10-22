@@ -26,7 +26,7 @@ export function Inicio({ inicial }: { inicial: Sitio | null }) {
           </h1>
           <p className="mt-5 max-w-xl text-lg text-banda-muted">
             Conectamos el escáner, te decimos qué tiene el auto y cuánto sale arreglarlo antes de tocar nada.
-            Todos los precios de mano de obra están publicados.
+            Todos los precios están publicados.
           </p>
           <div className="mt-8 flex flex-wrap gap-3">
             <ButtonLink href="/turnos" variante="accion" className="px-6 text-lg">Pedir turno</ButtonLink>
@@ -37,7 +37,7 @@ export function Inicio({ inicial }: { inicial: Sitio | null }) {
 
       <section className="mx-auto max-w-5xl px-4 py-12">
         <h2 className="text-3xl font-bold sm:text-4xl">Lo que cuesta, antes de venir</h2>
-        <p className="mt-2 max-w-xl text-muted">Mano de obra, sin repuestos. El valor final depende del modelo y del estado del auto: te lo confirmamos al revisarlo.</p>
+        <p className="mt-2 max-w-xl text-muted">Cada servicio aclara si incluye materiales. El valor final depende del modelo y del estado del auto: te lo confirmamos al revisarlo.</p>
         <div className="mt-6">
           {muestra.length > 0 ? (
             <Pizarra servicios={muestra.map((s) => ({ ...s, categoria: "Los más pedidos" }))} conLinks />

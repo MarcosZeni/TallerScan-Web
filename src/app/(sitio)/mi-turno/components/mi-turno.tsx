@@ -95,7 +95,7 @@ export function MiTurno() {
               </>
             )}
             <p>{[...turno.servicios, ...(turno.otro ? [`Otro: ${turno.otro}`] : [])].join(", ")}</p>
-            {turno.precioMax > 0 && <p className="tabular text-muted">Mano de obra estimada: {rangoPesos(turno.precioMin, turno.precioMax)} (sin repuestos)</p>}
+            {turno.precioMax > 0 && <p className="tabular text-muted">Precio estimado: {rangoPesos(turno.precioMin, turno.precioMax)}</p>}
             <p className="text-muted">{turno.marca} {turno.modelo}, patente {turno.patente}</p>
           </div>
 

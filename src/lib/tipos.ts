@@ -15,11 +15,16 @@ export type Taller = {
   nosotros: string;
 };
 
+/** Qué cubre el precio publicado. null = sin cartel (el escaneo). */
+export type Incluye = "mano_obra" | "materiales" | "kit" | null;
+
 export type ServicioPublico = {
   id: number;
   categoria: string;
   nombre: string;
   tiempo: string;
+  incluye: Incluye;
+  descripcion: string | null;
   precioMin: number;
   precioMax: number;
   esEscaneo: boolean;
@@ -148,6 +153,8 @@ export type ServicioAdmin = {
   categoria: string;
   nombre: string;
   tiempo: string;
+  incluye: Incluye;
+  descripcion: string | null;
   baseMin: number;
   baseMax: number | null;
   precioFijo: number | null;

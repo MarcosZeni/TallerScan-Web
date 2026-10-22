@@ -4,7 +4,8 @@ import { useState } from "react";
 import { useDatos } from "@/lib/use-datos";
 import { Aviso, Cargando } from "@/components/ui/aviso";
 import { Button } from "@/components/ui/button";
-import { Field, Input } from "@/components/ui/field";
+import { Field, Input, Select, Textarea } from "@/components/ui/field";
+import { CartelIncluye, INCLUYE } from "@/components/pizarra";
 import { api, mensajeDe } from "@/lib/api";
 import { formatoPesos, rangoPesos } from "@/lib/format";
 import { siVencio, useUsuario } from "@/lib/sesion";
@@ -110,6 +111,7 @@ function ServicioFila({ s, onGuardado }: { s: ServicioAdmin | null; onGuardado: 
   const [abierto, setAbierto] = useState(false);
   const [v, setV] = useState({
     categoria: s?.categoria ?? "", nombre: s?.nombre ?? "", tiempo: s?.tiempo ?? "1 h",
+    incluye: (s ? s.incluye ?? "" : "mano_obra") as string, descripcion: s?.descripcion ?? "",
     baseMin: String(s?.baseMin ?? ""), baseMax: String(s?.baseMax ?? ""), precioFijo: String(s?.precioFijo ?? ""),
     orden: String(s?.orden ?? 500), activo: s?.activo ?? true, esEscaneo: s?.esEscaneo ?? false,
   });
@@ -134,7 +136,8 @@ function ServicioFila({ s, onGuardado }: { s: ServicioAdmin | null; onGuardado: 
     return s ? (
       <div className={`flex flex-wrap items-center justify-between gap-3 rounded-md border-2 border-border bg-surface p-3 ${s.activo ? "" : "opacity-60"}`}>
         <div>
-          <p className="font-semibold">{s.nombre}{!s.activo && " (oculto)"}</p>
+          <p className="font-semibold">{s.nombre}{!s.activo && " (oculto)"} <CartelIncluye incluye={s.incluye} /></p>
+          {s.descripcion && <p className="whitespace-pre-line text-sm">{s.descripcion}</p>}
           <p className="tabular text-sm text-muted">
             Base {s.precioFijo != null ? `fijo ${formatoPesos(s.precioFijo)}` : rangoPesos(s.baseMin, s.baseMax ?? s.baseMin)} → en la web <b className="text-foreground">{rangoPesos(s.precioMin, s.precioMax)}</b>
           </p>
@@ -154,7 +157,16 @@ function ServicioFila({ s, onGuardado }: { s: ServicioAdmin | null; onGuardado: 
         <Field label="Precio fijo (pisa la fórmula)" htmlFor={`pf-${s?.id}`} ayuda="Para el escaneo. Vacío = se calcula."><Input id={`pf-${s?.id}`} inputMode="numeric" value={v.precioFijo} onChange={(e) => setV({ ...v, precioFijo: e.target.value })} /></Field>
         <Field label="Tiempo estimado" htmlFor={`t-${s?.id}`}><Input id={`t-${s?.id}`} value={v.tiempo} onChange={(e) => setV({ ...v, tiempo: e.target.value })} /></Field>
         <Field label="Orden en la lista" htmlFor={`o-${s?.id}`}><Input id={`o-${s?.id}`} inputMode="numeric" value={v.orden} onChange={(e) => setV({ ...v, orden: e.target.value })} /></Field>
+        <Field label="Qué incluye el precio" htmlFor={`i-${s?.id}`} ayuda="Es el cartel que se ve al lado del servicio.">
+          <Select id={`i-${s?.id}`} value={v.incluye} onChange={(e) => setV({ ...v, incluye: e.target.value })}>
+            {Object.entries(INCLUYE).map(([valor, c]) => <option key={valor} value={valor}>{c.texto}</option>)}
+            <option value="">Sin cartel</option>
+          </Select>
+        </Field>
       </div>
+      <Field label="Descripción (se ve en la web, debajo del nombre)" htmlFor={`d-${s?.id}`} ayuda="Opcional, hasta 300 caracteres. Ej: Motor convencional de 8 válvulas.">
+        <Textarea id={`d-${s?.id}`} rows={2} maxLength={300} value={v.descripcion} onChange={(e) => setV({ ...v, descripcion: e.target.value })} />
+      </Field>
       <label className="flex items-center gap-2"><input type="checkbox" className="size-5" checked={v.activo} onChange={(e) => setV({ ...v, activo: e.target.checked })} /> Se muestra en la web</label>
       <label className="flex items-center gap-2"><input type="checkbox" className="size-5" checked={v.esEscaneo} onChange={(e) => setV({ ...v, esEscaneo: e.target.checked })} /> Es el escaneo (se reparte fijo y se puede descontar)</label>
       {error && <Aviso tipo="error">{error}</Aviso>}

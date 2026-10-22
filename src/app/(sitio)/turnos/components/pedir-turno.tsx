@@ -12,6 +12,7 @@ import { fechaCorta, fechaLarga, formatoPesos, hora, horaCorta, rangoPesos } fro
 import { useSitio } from "@/lib/sitio";
 import type { Disponibilidad, Opcion, Sitio } from "@/lib/tipos";
 import { SelectorOpciones } from "@/components/selector-opciones";
+import { CartelIncluye } from "@/components/pizarra";
 import { guardarCodigo } from "@/lib/mis-turnos";
 import { useDatos } from "@/lib/use-datos";
 
@@ -152,7 +153,7 @@ export function PedirTurno({ inicial }: { inicial: Sitio | null }) {
       {paso === 1 && (
         <section className="mt-8">
           <h2 className="text-2xl font-bold">¿Qué necesita el auto?</h2>
-          <p className="text-muted">Podés elegir más de uno. Precios de mano de obra, sin repuestos.</p>
+          <p className="text-muted">Podés elegir más de uno. Cada servicio aclara si incluye materiales.</p>
           {!sitio && (errorSitio ? <Aviso tipo="error">No pudimos cargar los servicios. Recargá la página.</Aviso> : <Cargando />)}
           <div className="mt-4 space-y-6">
             {grupos.map(([cat, lista]) => (
@@ -162,7 +163,11 @@ export function PedirTurno({ inicial }: { inicial: Sitio | null }) {
                   {lista.map((s) => (
                     <label key={s.id} className={`flex min-h-12 cursor-pointer items-center gap-3 rounded-md border-2 px-3 py-2 ${elegidos.includes(s.id) ? "border-primary bg-primary-soft" : "border-border bg-surface"}`}>
                       <input type="checkbox" className="size-5 accent-[var(--color-primary)]" checked={elegidos.includes(s.id)} onChange={() => toggle(s.id)} />
-                      <span className="flex-1">{s.nombre}</span>
+                      <span className="flex-1">
+                        {s.nombre}
+                        <CartelIncluye incluye={s.incluye} className="ml-2" />
+                        {s.descripcion && <span className="block whitespace-pre-line text-sm text-muted">{s.descripcion}</span>}
+                      </span>
                       <span className="tabular whitespace-nowrap font-semibold">{rangoPesos(s.precioMin, s.precioMax)}</span>
                     </label>
                   ))}
@@ -309,7 +314,7 @@ export function PedirTurno({ inicial }: { inicial: Sitio | null }) {
           <div className="rounded-md border-2 border-border bg-surface p-4">
             <p className="font-semibold">Resumen</p>
             <p>{[...seleccion.map((s) => s.nombre), ...(conOtro && otro ? [`Otro: ${otro}`] : [])].join(", ")}</p>
-            {seleccion.length > 0 && <p className="tabular">Mano de obra estimada: {rangoPesos(totalMin, totalMax)}</p>}
+            {seleccion.length > 0 && <p className="tabular">Precio estimado: {rangoPesos(totalMin, totalMax)}</p>}
             <p className="text-muted">
               {tipoEnvio === "hoy"
                 ? `Hoy a las ${hora(disp?.hoy.bloques.find((b) => b.id === bloqueId)?.inicio)}`
