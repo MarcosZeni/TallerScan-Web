@@ -60,7 +60,10 @@ function Tramos({ inicial, onGuardado }: { inicial: PreciosConfig; onGuardado: (
   return (
     <section className="space-y-4 rounded-md border-2 border-border bg-surface p-4">
       <h2 className="text-2xl font-bold">Ganancia por tramos</h2>
-      <p className="text-muted">Cada porcentaje se aplica solo a la parte del precio base que cae en su tramo.</p>
+      <p className="text-muted">
+        Hasta el monto de abajo, cada porcentaje se aplica solo a la parte del precio base que cae en su tramo.
+        Arriba de ese monto, el porcentaje del tramo va sobre toda la base.
+      </p>
       <div className="space-y-2">
         {p.tramos.map((t, i) => {
           const desde = i === 0 ? 0 : p.tramos[i - 1].hasta ?? 0;
@@ -94,6 +97,9 @@ function Tramos({ inicial, onGuardado }: { inicial: PreciosConfig; onGuardado: (
         }}>Agregar tramo</Button>
       </div>
       <div className="flex flex-wrap gap-4">
+        <Field label="% directo para bases de más de" htmlFor="dir" ayuda="Vacío = todo por tramos.">
+          <Input id="dir" inputMode="numeric" className="w-36" value={p.directoDesde ?? ""} onChange={(e) => setP({ ...p, directoDesde: Number(e.target.value.replace(/\D/g, "")) || null })} />
+        </Field>
         <Field label="Redondear hacia arriba a múltiplos de" htmlFor="red">
           <Input id="red" inputMode="numeric" className="w-36" value={p.redondeo} onChange={(e) => setP({ ...p, redondeo: Number(e.target.value.replace(/\D/g, "")) || 1 })} />
         </Field>

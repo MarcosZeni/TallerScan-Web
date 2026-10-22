@@ -166,7 +166,8 @@ export type ServicioAdmin = {
 };
 
 export type Tramo = { hasta: number | null; porcentaje: number };
-export type PreciosConfig = { tramos: Tramo[]; redondeo: number; escaneoParteMecanico: number };
+/** directoDesde: arriba de esa base, el % del tramo va sobre toda la base. null = todo por tramos. */
+export type PreciosConfig = { tramos: Tramo[]; redondeo: number; escaneoParteMecanico: number; directoDesde: number | null };
 
 export type BloqueFijo = { inicio: string; cupo: number };
 
