@@ -2,6 +2,21 @@
 
 Sitio público (portada, precios, pedir turno, mi turno, dónde estamos) y panel de los socios (hoy, turnos, métricas, finanzas, precios, ajustes, cuenta). Next.js 16 + React 19 + Tailwind 4, **exportado estático**: `npm run build` deja todo en `out/` y lo sirve nginx. Lo dinámico lo pide el navegador a ApiCore por `/api`.
 
+## Capturas
+
+Mobile-first: el cliente pide el turno desde el celular y el mecánico atiende el panel desde un iPhone. Celular a 390 px y escritorio a 1440 px.
+
+<p align="center">
+  <img src="docs/capturas/inicio-movil.png" width="24%" alt="Portada en celular: promo del escaneo y los servicios más pedidos">
+  <img src="docs/capturas/tarifas-movil.png" width="24%" alt="Tarifario en celular: cada servicio aclara si incluye materiales">
+  <img src="docs/capturas/turnos-movil.png" width="24%" alt="Pedir turno en celular, paso 1 de 3">
+  <img src="docs/capturas/mi-turno-movil.png" width="24%" alt="Mi turno: buscar los turnos propios por patente y contacto">
+</p>
+
+![Portada en escritorio](docs/capturas/inicio-escritorio.png)
+
+![Pedir turno en escritorio: tres pasos, servicios con precio y etiqueta de materiales](docs/capturas/turnos-escritorio.png)
+
 ## Desarrollo
 
 1. Levantar la API: `..\ApiCore\iniciar-api.bat` (queda en `http://localhost:5100`).
